@@ -1,13 +1,10 @@
-#include "protos.h"
+#include "head.h"
 
-// Draw related constants and variables
-const unsigned int ScrSize = 1000;  // pixel size of screen (its square)
 float XLIML = -2.0; // lower x starting lim
 float XLIMH = 0.0; // upper x starting lim
 float YLIML = -1.0; // lower y starting lim
 float YLIMH = 1.0;  // upper y starting lim
 float delta = 0.1; // how much to move per key press (scales when zooming)
-const float sigma = 0.8; // coeffitient for zooming/dezooming
 
 int main () {
 
@@ -22,12 +19,7 @@ int main () {
 
         clock_t time = clock ();    // gets initial time
 
-        for (int i = 0; i < ScrSize * ScrSize * 4; i+=4) {
-
-            calcPoint (rgbaArray + i, rgbaArray + i + 1, rgbaArray + i + 2, rgbaArray + i + 3,
-                XLIML + float((i / 4) % ScrSize) / ScrSize * (XLIMH - XLIML),       // calls calc function
-                YLIMH - float(i / (ScrSize * 4)) / ScrSize * (YLIMH - YLIML));
-        }
+        calcScr (rgbaArray);
 
         time = (clock () - time) * 1000 / CLOCKS_PER_SEC; // measures work time
 
