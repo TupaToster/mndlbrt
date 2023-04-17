@@ -1,81 +1,44 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <stdio.h>
-#include <stdlib.h>
-#include <immintrin.h>
-#include <chrono>
+#include "protos.h"
 
-const unsigned int ScrSize = 1000;
-float XLIML = -2.0;
-float XLIMH = 0.0;
-float YLIML = -1.0;
-float YLIMH = 1.0;
-float delta = 0.1;
-const float sigma = 0.8;
-
-inline void calcPoint (unsigned char* r, unsigned char* g, unsigned char* b, unsigned char* a, float x, float y) {
-
-    unsigned int i = 0;
-
-    float x_0 = x;
-    float y_0 = y;
-    const int topCalcLimit = 100;
-    const float maxDist = 100;
-    const unsigned char r0 = 49;
-    const unsigned char g0 = 56;
-    const unsigned char b0 = 54;
-    const unsigned char r1 = 255;
-    const unsigned char g1 = 10;
-    const unsigned char b1 = 10;
-
-    for (i = 0; i < topCalcLimit; i++) {
-
-        if (x * x + y * y >= maxDist) break;
-        float xt = x;
-        x = x * x - y * y + x_0;
-        y = 2 * xt * y + y_0;
-
-    }
-    *r = r0 + (i * (r1 - r0) / topCalcLimit);
-    *g = g0 + (i * (g1 - g0) / topCalcLimit);
-    *b = b0 + (i * (b1 - b0) / topCalcLimit);
-
-    *a = 255;
-}
-
+// Draw related constants and variables
+const unsigned int ScrSize = 1000;  // pixel size of screen (its square)
+float XLIML = -2.0; // lower x starting lim
+float XLIMH = 0.0; // upper x starting lim
+float YLIML = -1.0; // lower y starting lim
+float YLIMH = 1.0;  // upper y starting lim
+float delta = 0.1; // how much to move per key press (scales when zooming)
+const float sigma = 0.8; // coeffitient for zooming/dezooming
 
 int main () {
 
     sf::RenderWindow window (sf::VideoMode (ScrSize, ScrSize), "mndlbrt");
 
-    sf::Texture pixlArr;
-    pixlArr.create (ScrSize, ScrSize);
+    sf::Texture pixlArr;    // creates a texture
+    pixlArr.create (ScrSize, ScrSize); // sets its dimensions to ScrSize * ScrSize
 
-    unsigned char rgbArray[ScrSize * ScrSize * 4] = {0};
+    unsigned char rgbaArray[ScrSize * ScrSize * 4] = {0};    // Array of rgb quads
 
     while (window.isOpen ()) {
 
-
-        clock_t time = clock ();
+        clock_t time = clock ();    // gets initial time
 
         for (int i = 0; i < ScrSize * ScrSize * 4; i+=4) {
 
-            calcPoint (rgbArray + i, rgbArray + i + 1, rgbArray + i + 2, rgbArray + i + 3,
-                XLIML + float((i / 4) % ScrSize) / ScrSize * (XLIMH - XLIML),
+            calcPoint (rgbaArray + i, rgbaArray + i + 1, rgbaArray + i + 2, rgbaArray + i + 3,
+                XLIML + float((i / 4) % ScrSize) / ScrSize * (XLIMH - XLIML),       // calls calc function
                 YLIMH - float(i / (ScrSize * 4)) / ScrSize * (YLIMH - YLIML));
         }
 
-        time = (clock () - time) * 1000 / CLOCKS_PER_SEC;
+        time = (clock () - time) * 1000 / CLOCKS_PER_SEC; // measures work time
 
         printf ("%ld\n", time);
 
-        pixlArr.update (rgbArray);
+        pixlArr.update (rgbaArray);      // updates texture with rgbquad array
 
-        sf::Sprite sprite (pixlArr);
+        sf::Sprite sprite (pixlArr);    // creates sprite (хз зачем но так в примере сфмла написано)
 
-        window.draw (sprite);
-        window.display ();
+        window.draw (sprite);   // draws to window
+        window.display ();  // displays it
 
         if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left)) {
 
@@ -97,7 +60,7 @@ int main () {
             YLIML -= delta;
             YLIMH -= delta;
         }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Equal)) {
+        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Equal)) {    // Zoom
 
             float shift = (XLIMH - XLIML - sigma * (XLIMH - XLIML)) / 2;
             XLIML += shift;
@@ -106,7 +69,7 @@ int main () {
             YLIML += shift;
             delta *= sigma;
         }
-        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Dash)) {
+        else if (sf::Keyboard::isKeyPressed (sf::Keyboard::Dash)) {     // UnZoom
 
             float shift = ((XLIMH - XLIML) / sigma - XLIMH + XLIML) / 2;
             XLIML -= shift;
@@ -116,9 +79,9 @@ int main () {
             delta /= sigma;
         }
 
-        sf::Event event;
+        sf::Event event;        // Event var
 
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event)) {   // Check for being closed if there is an event (to close the window lol)
 
             if (event.type == sf::Event::Closed)
                 window.close();
