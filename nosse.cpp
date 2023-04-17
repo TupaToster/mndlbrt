@@ -22,10 +22,9 @@ void calcScr (unsigned char* rgba) {
             float x_2 = x * x;  // x, y squared
             float y_2 = y * y;  // x, y squared
 
-            if (x_2 + y_2 >= maxDistSq) break;
-            float xt = x;
+            if (x_2 + y_2 > maxDistSq) break;
+            y = 2 * x * y + y_0;       // calculation of new iteration
             x = x_2 - y_2 + x_0;    // calculation of new iteration
-            y = 2 * xt * y + y_0;       // calculation of new iteration
 
         }
 

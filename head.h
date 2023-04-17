@@ -3,7 +3,7 @@
 #include <SFML/System.hpp>
 #include <stdio.h>
 #include <stdlib.h>
-#include <xmmintrin.h>
+#include <immintrin.h>
 #include <chrono>
 
 const unsigned int ScrSize = 1000;  // pixel size of screen (its square)
