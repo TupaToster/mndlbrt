@@ -29,10 +29,9 @@ void calcScr (unsigned char* rgba) {
         }
 
         if (i == topCalcLimit) i = 0; // sets to default color if maxxed out the calculation limit
-        rgba[scrIter] = r0 + (i * (r1 - r0) / topCalcLimit); //
+        rgba[scrIter    ] = r0 + (i * (r1 - r0) / topCalcLimit); //
         rgba[scrIter + 1] = g0 + (i * (g1 - g0) / topCalcLimit); // setting color calculated as a simple fader (could be made logarithmical for the lols)
         rgba[scrIter + 2] = b0 + (i * (b1 - b0) / topCalcLimit); //
-
-        rgba[scrIter + 3] = 255;
+        rgba[scrIter + 3] = a0 + (i * (a1 - a0) / topCalcLimit); //
     }
 }
