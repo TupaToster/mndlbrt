@@ -29,6 +29,9 @@ int main () {
 
         sf::Sprite sprite (pixlArr);    // creates sprite (хз зачем но так в примере сфмла написано)
 
+        #ifdef NO_AFTER_IMAGE
+        window.clear ();
+        #endif
         window.draw (sprite);   // draws to window
         window.display ();  // displays it
 
