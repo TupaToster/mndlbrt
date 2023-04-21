@@ -32,7 +32,7 @@ $(DEPDIR):
 	mkdir $@
 
 clean:
-	rm -rf *.o *.d nosse
+	rm -rf *.o *.d nosse avx
 	rm -rf $(DEPDIR) $(OBJDIR)
 	clear
 

@@ -1,5 +1,7 @@
 #include "head.h"
 
+
+
 /// @brief Calculates whole screens specs and writes to rgba array
 /// @param rgba array of pixels in rgbquad format
 void calcScr (unsigned char* rgba) {
